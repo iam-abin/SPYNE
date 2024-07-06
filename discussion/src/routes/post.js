@@ -17,8 +17,7 @@ router.post("/", auth, createPostInputValidator, createPost);
 router.patch("/:postId", auth, updateInputValidator, updatePost);
 router.delete("/:postId", auth, deletePost);
 
-
-router.get("/", auth, searchPostsByHashTags);
+router.post("/search-by-tags", auth, searchPostsByHashTags);
 router.get("/search/:text", auth, searchPostsByText);
 
 export default router;

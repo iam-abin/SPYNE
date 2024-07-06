@@ -1,15 +1,22 @@
 import { PostRepository } from "../database/repository/post.repository.js";
+import { filterAndNormalizeHashtags } from "../utils/checkHashtags.js";
 
 const postRepository = new PostRepository();
 
 const createPost = async (req, res, next) => {
 	try {
-		const { text, image } = req.body;
+		const { text, image, hashTags } = req.body;
 		const { userId } = req.user;
+		let hashTagsArray = [];
+		if (hashTags) {
+			hashTagsArray = filterAndNormalizeHashtags(hashTags);
+		}
+
 		const newPost = await postRepository.createPost({
-			createdBy: userId,
 			text,
 			image,
+			hashTags: hashTagsArray,
+			createdBy: userId,
 		});
 		res.status(201).json(newPost);
 	} catch (error) {
@@ -20,7 +27,13 @@ const createPost = async (req, res, next) => {
 const updatePost = async (req, res, next) => {
 	try {
 		const { postId } = req.params;
-		const updatedUser = await postRepository.updatePost(postId, req.body);
+		const updateData = req.body;
+		if (hashTags) {
+			let hashTagsArray = [];
+			hashTagsArray = extractHashtags(hashTags);
+			updateData.hashTags = hashTagsArray;
+		}
+		const updatedUser = await postRepository.updatePost(postId, updateData);
 		res.status(200).json(updatedUser);
 	} catch (error) {
 		next(error);
@@ -40,6 +53,7 @@ const searchPostsByText = async (req, res, next) => {
 const searchPostsByHashTags = async (req, res, next) => {
 	try {
 		const { hashTags } = req.body;
+		
 		const posts = await postRepository.getPostsByHashTags(hashTags);
 		res.status(200).json(posts);
 	} catch (error) {
