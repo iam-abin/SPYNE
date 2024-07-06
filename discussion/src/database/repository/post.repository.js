@@ -13,6 +13,7 @@ export class PostRepository {
 	}
 
 	async getPostsByText(text) {
+		console.log(text);
 		const post = await Post.find({ text: text, isDeleted: false });
 		return post;
 	}

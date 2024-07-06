@@ -49,6 +49,7 @@ const searchPostsByHashTags = async (req, res, next) => {
 
 const deletePost = async (req, res, next) => {
 	try {
+		const { postId } = req.params;
 		const deletedPost = await postRepository.deletePost(postId);
 		res.status(200).json(deletedPost);
 	} catch (error) {

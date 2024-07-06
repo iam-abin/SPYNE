@@ -15,8 +15,8 @@ const router = express.Router();
 
 router.post("/", auth, createPostInputValidator, createPost);
 router.patch("/:postId", auth, updateInputValidator, updatePost);
+router.delete("/:postId", auth, deletePost);
 
-router.delete("/", auth, deletePost);
 
 router.get("/", auth, searchPostsByHashTags);
 router.get("/search/:text", auth, searchPostsByText);
