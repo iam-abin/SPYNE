@@ -1,0 +1,52 @@
+version: '3.8'
+
+services:
+  discussion-service:
+    container_name: discussion
+    build:
+      context: ./discussion
+      dockerfile: Dockerfile
+    ports:
+      - 3001:3001
+    volumes:
+      - /app/node_modules
+      - ./discussion:/app
+    depends_on:
+      - mongodb
+      - user-service
+    restart: always
+    
+  user-service:
+    container_name: user
+    build:
+      context: ./user
+      dockerfile: Dockerfile
+    ports:
+      - 3000:3000
+    volumes:
+      - /app/node_modules
+      - ./user:/app
+    restart: always
+
+  mongodb:
+    container_name: mongodb
+    image: mongo
+    ports:
+      - 27018:27017
+    volumes:
+      - ./db/:/data/db
+
+  nginx:
+    container_name: nginx_proxy
+    build: 
+      dockerfile: Dockerfile
+      context: ./proxy
+    ports:
+      - 8080:80
+    depends_on:
+      - mongodb
+      - discussion-service
+      - user-service
+    volumes:
+      - ./proxy/nginx.conf:/etc/nginx/nginx.conf
+    restart: always
