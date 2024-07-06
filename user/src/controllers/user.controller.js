@@ -74,7 +74,7 @@ const getAllUsers = async (req, res, next) => {
 
 const searchUser = async (req, res, next) => {
 	try {
-		const {name} = req.params
+		const { name } = req.params;
 		const users = await userRepository.searchUsers(name);
 		res.status(200).json(users);
 	} catch (error) {
@@ -84,7 +84,25 @@ const searchUser = async (req, res, next) => {
 
 const followAUser = async (req, res, next) => {
 	try {
-		res.status(200).json(user);
+		const { id } = req.params;
+		const { userId } = req.user;
+		const otherUser = await userRepository.getUserById(id)
+		if(!otherUser && otherUser.isDeleted) throw new Error("Other user does not exist")
+		const followResult = await userRepository.followAUser(userId, id);
+		res.status(200).json(followResult);
+	} catch (error) {
+		next(error);
+	}
+};
+
+const unFollowAUser = async (req, res, next) => {
+	try {
+		const { id } = req.params;
+		const { userId } = req.user;
+		const otherUser = await userRepository.getUserById(id)
+		if(!otherUser && otherUser.isDeleted) throw new Error("Other user does not exist")
+		const unFollowResult = await userRepository.unFollowAUser(userId, id);
+		res.status(200).json(unFollowResult);
 	} catch (error) {
 		next(error);
 	}
@@ -107,5 +125,6 @@ export {
 	getAllUsers,
 	searchUser,
 	followAUser,
+	unFollowAUser,
 	deleteUser,
 };

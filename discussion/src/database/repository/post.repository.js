@@ -1,5 +1,4 @@
 import { Post } from "../model/post.model.js";
-import mongoose from "mongoose";
 
 export class PostRepository {
 	async createPost(postData) {

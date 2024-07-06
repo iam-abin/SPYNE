@@ -7,6 +7,7 @@ import {
 	userSignin,
 	searchUser,
 	updateUser,
+	unFollowAUser,
 } from "../controllers/user.controller.js";
 import { auth } from "../middleware/auth.js";
 import { signinInputValidator } from "../middleware/validations/validate.signin.js";
@@ -22,7 +23,8 @@ router.patch("/", auth, updateInputValidator, updateUser);
 router.get("/all-users", auth, getAllUsers);
 router.get("/search/:name", searchUser);
 
-router.patch("/follow", auth, followAUser);
+router.patch("/follow/:id", auth, followAUser);
+router.patch("/unfollow/:id", auth, unFollowAUser);
 
 // Can perform operation such as delete user account.
 router.delete("/", auth, deleteUser);

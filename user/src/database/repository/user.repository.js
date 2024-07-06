@@ -6,9 +6,14 @@ export class UserRepository {
 		const user = await User.create(userData);
 		return user;
 	}
-	
+
 	async getUserByEmail(email) {
 		const user = await User.findOne({ email });
+		return user;
+	}
+
+	async getUserById(id) {
+		const user = await User.findById(id);
 		return user;
 	}
 
@@ -26,7 +31,10 @@ export class UserRepository {
 
 	async searchUsers(name) {
 		console.log(name);
-		const user = await User.find({ name: { $regex: name, $options: "i" }, isDeleted: false });
+		const user = await User.find({
+			name: { $regex: name, $options: "i" },
+			isDeleted: false,
+		});
 		console.log(user);
 		return user;
 	}
@@ -37,6 +45,40 @@ export class UserRepository {
 		});
 		return user;
 	}
+
+	async followAUser(userId, otherUserId) {
+		const following = await User.findByIdAndUpdate(
+		  userId,
+		  { $addToSet: { following: new mongoose.Types.ObjectId(otherUserId) } },
+		  { new: true }
+		);
+	  
+		const follower = await User.findByIdAndUpdate(
+		  otherUserId,
+		  { $addToSet: { followers: new mongoose.Types.ObjectId(userId) } },
+		  { new: true }
+		);
+	  
+		return { following, follower };
+	  }
+	  
+
+	async unFollowAUser(userId, otherUserId) {
+		const following = await User.findByIdAndUpdate(
+		  userId,
+		  { $pull: { following: new mongoose.Types.ObjectId(otherUserId) } },
+		  { new: true }
+		);
+	  
+		const follower = await User.findByIdAndUpdate(
+		  otherUserId,
+		  { $pull: { followers: new mongoose.Types.ObjectId(userId) } },
+		  { new: true }
+		);
+	  
+		return { following, follower };
+	  }
+	  
 
 	async deleteUser(userId) {
 		const user = await User.findByIdAndUpdate(
