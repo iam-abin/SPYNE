@@ -6,12 +6,7 @@ export class UserRepository {
 		const user = await User.create(userData);
 		return user;
 	}
-
-	async getUserById(userData) {
-		const user = await User.create(userData);
-		return user;
-	}
-
+	
 	async getUserByEmail(email) {
 		const user = await User.findOne({ email });
 		return user;

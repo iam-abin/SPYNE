@@ -5,7 +5,7 @@ import { connectDB } from "./src/config/db.js";
 
 await connectDB();
 
-const PORT = process.env.PORT || 8000;
+const PORT = process.env.PORT || 8001;
 app.listen(PORT, () =>
-	console.log(`User service is listening on port ${PORT}...`)
+	console.log(`Discussion service is listening on port ${PORT}...`)
 );
