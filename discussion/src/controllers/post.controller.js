@@ -28,6 +28,7 @@ const createPost = async (req, res, next) => {
 const updatePost = async (req, res, next) => {
 	try {
 		const { postId } = req.params;
+		const { userId } = req.user;
 		const updateData = req.body;
 		const existPost = await postRepository.getPostById(postId);
 		if (existPost.createdBy.toString() !== userId)
@@ -59,7 +60,6 @@ const searchPostsByText = async (req, res, next) => {
 const searchPostsByHashTags = async (req, res, next) => {
 	try {
 		const { hashTags } = req.body;
-
 		const posts = await postRepository.getPostsByHashTags(hashTags);
 		// Increase the view count since the user viewing the post
 		await postRepository.increaseViewCount(posts);

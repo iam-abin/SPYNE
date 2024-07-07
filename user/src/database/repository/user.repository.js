@@ -30,12 +30,10 @@ export class UserRepository {
 	}
 
 	async searchUsers(name) {
-		console.log(name);
 		const user = await User.find({
 			name: { $regex: name, $options: "i" },
 			isDeleted: false,
 		});
-		console.log(user);
 		return user;
 	}
 

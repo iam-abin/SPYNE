@@ -12,9 +12,7 @@ export class PostRepository {
 	}
 
 	async getPostsByHashTags(hashtagArray) {
-		console.log(hashtagArray);
 		const posts = await Post.find({ hashTags: { $in: hashtagArray } });
-		console.log(posts);
 		return posts;
 	}
 

@@ -23,8 +23,8 @@ router.post("/", auth, uploadFile, createPostInputValidator, handleValidationErr
 router.patch("/:postId", auth, updateInputValidator, updatePost);
 router.delete("/:postId", auth, deletePost);
 
-router.post("/search-by-tags", auth, searchPostsByHashTags);
-router.get("/search/:text", auth, searchPostsByText);
+router.post("/search-by-tags", searchPostsByHashTags);
+router.get("/search/:text", searchPostsByText);
 
 router.post("/like-post/:postId", auth, likePost);
 router.delete("/like-post/:likeId", auth, removePostLike);

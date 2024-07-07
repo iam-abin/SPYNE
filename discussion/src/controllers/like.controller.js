@@ -73,6 +73,7 @@ const removePostLike = async (req, res, next) => {
 const removeCommentLike = async (req, res, next) => {
 	try {
 		const { likeId } = req.params;
+		const { userId } = req.user;
 		const existLike = await likeRepository.getLikeById(likeId);
 		if (!existLike) throw new Error("Like does not exist");
 		if (!existLike.commentId) throw new Error("This is not a comment like");
