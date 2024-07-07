@@ -51,11 +51,11 @@ http://localhost:8080/api/v1/post/<other path>
 ```
 
 ### LLD
-===
+---
 
 [LLD](https://drive.google.com/file/d/1WYV1ie-KXL3hBC-8IIDrzGUOQdUUWj5X/view?usp=sharing)
 
 ### POSTMAN COLLECTION
-===
+---
 
 [collection](https://drive.google.com/file/d/1NBQoKRvAKq-dpStouXGzQQZ-t8IHqCJC/view?usp=sharing)
