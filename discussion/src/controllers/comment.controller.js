@@ -10,6 +10,13 @@ const addComment = async (req, res, next) => {
 		const { userId } = req.user;
 		const existPost = await postRepository.getPostById(postId);
 		if (!existPost) throw new Error("Post does not exist");
+		if (parentCommentId) {
+			const existParentComment = await commentRepository.getCommentById(
+				parentCommentId
+			);
+			if (!existParentComment)
+				throw new Error("Parent comment does not exist");
+		}
 		const newComment = await commentRepository.createComment({
 			comment,
 			postId,
@@ -60,20 +67,5 @@ const removeComment = async (req, res, next) => {
 	}
 };
 
-// const getAllComments = async (req, res, next) => {
-// 	try {
-// 		const { commentId } = req.params;
-// 		const {userId} = req.user
-
-// 		const existComment = await commentRepository.getCommentById(commentId);
-// 		if (existComment.createdBy.toString() !== userId)
-// 			throw new Error("You dont have such comment exist");
-// 		const deleted = await commentRepository.deleteComment(commentId);
-
-// 		res.status(200).json(deleted);
-// 	} catch (error) {
-// 		next(error);
-// 	}
-// };
 
 export { addComment, updateComment, removeComment };

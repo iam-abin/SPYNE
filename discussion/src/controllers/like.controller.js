@@ -39,7 +39,7 @@ const likeComment = async (req, res, next) => {
 			userId,
 			commentId
 		);
-		if (likeExist) throw new Error("Already liked this post");
+		if (likeExist) throw new Error("Already liked this Comment");
 
 		const newLike = await likeRepository.createLike({
 			commentId,
@@ -55,8 +55,13 @@ const likeComment = async (req, res, next) => {
 const removePostLike = async (req, res, next) => {
 	try {
 		const { likeId } = req.params;
+		const { userId } = req.user;
 		const existLike = await likeRepository.getLikeById(likeId);
 		if (!existLike) throw new Error("Like does not exist");
+		if (!existLike.postId) throw new Error("This is not a post like");
+		// Checking the like is of the current user
+		if (existLike?.likedBy.toString() !== userId)
+			throw new Error("You dont have such like exist");
 		const deleted = await likeRepository.deleteLike(likeId);
 
 		res.status(200).json(deleted);
@@ -70,6 +75,10 @@ const removeCommentLike = async (req, res, next) => {
 		const { likeId } = req.params;
 		const existLike = await likeRepository.getLikeById(likeId);
 		if (!existLike) throw new Error("Like does not exist");
+		if (!existLike.commentId) throw new Error("This is not a comment like");
+		// Checking the like is of the current user
+		if (existLike?.likedBy.toString() !== userId)
+			throw new Error("You dont have such like exist");
 		const deleted = await likeRepository.deleteLike(likeId);
 
 		res.status(200).json(deleted);
@@ -78,17 +87,5 @@ const removeCommentLike = async (req, res, next) => {
 	}
 };
 
-// const getAllLikes = async (req, res, next) => {
-// 	try {
-// 		const { likeId } = req.params;
-// 		const existLike = await likeRepository.getLikeById(likeId);
-// 		if (!existLike) throw new Error("Like does not exist");
-// 		const deleted = await likeRepository.deleteLike(likeId);
-
-// 		res.status(200).json(deleted);
-// 	} catch (error) {
-// 		next(error);
-// 	}
-// };
 
 export { likePost, likeComment, removePostLike, removeCommentLike };

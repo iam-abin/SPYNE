@@ -19,6 +19,12 @@ const userSignup = async (req, res, next) => {
 		res.cookie("token", token, { httpOnly: true });
 		res.status(201).json(newUser);
 	} catch (error) {
+		if (error.code === 11000) {
+			const duplicateField = Object.keys(error.keyValue)[0];
+			if (duplicateField === "mobile") {
+				next({ message: "Mobile already exists" });
+			}
+		}
 		next(error);
 	}
 };
@@ -28,12 +34,12 @@ const userSignin = async (req, res, next) => {
 		const { email, password } = req.body;
 		const existingUser = await userRepository.getUserByEmail(email);
 
-		if (!existingUser) throw new Error("Invalid username or password");
+		if (!existingUser) throw new Error("Invalid email or password");
 		if (existingUser.isDeleted) throw new Error("Blocked Account");
 
 		const samePassword = comparePasswords(password, existingUser.password);
 
-		if (!samePassword) throw new Error("Invalid username or password");
+		if (!samePassword) throw new Error("Invalid email or password");
 
 		const payLoad = {
 			userId: existingUser._id,
