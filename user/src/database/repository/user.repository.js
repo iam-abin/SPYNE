@@ -47,12 +47,13 @@ export class UserRepository {
 	}
 
 	async followAUser(userId, otherUserId) {
+		// Updaing following list of current user
 		const following = await User.findByIdAndUpdate(
 		  userId,
 		  { $addToSet: { following: new mongoose.Types.ObjectId(otherUserId) } },
 		  { new: true }
 		);
-	  
+		// Updaing followers list of other user
 		const follower = await User.findByIdAndUpdate(
 		  otherUserId,
 		  { $addToSet: { followers: new mongoose.Types.ObjectId(userId) } },
@@ -64,12 +65,14 @@ export class UserRepository {
 	  
 
 	async unFollowAUser(userId, otherUserId) {
+		// Updaing following list of current user
 		const following = await User.findByIdAndUpdate(
 		  userId,
 		  { $pull: { following: new mongoose.Types.ObjectId(otherUserId) } },
 		  { new: true }
 		);
 	  
+		// Updaing followers list of other user
 		const follower = await User.findByIdAndUpdate(
 		  otherUserId,
 		  { $pull: { followers: new mongoose.Types.ObjectId(userId) } },

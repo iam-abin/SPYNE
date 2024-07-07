@@ -17,7 +17,7 @@ import { updateInputValidator } from "../middleware/validations/validate.update.
 const router = express.Router();
 
 router.post("/signup", signupInputValidator, userSignup);
-router.post("/signin",signinInputValidator, userSignin);
+router.post("/signin", signinInputValidator, userSignin);
 router.patch("/", auth, updateInputValidator, updateUser);
 
 router.get("/all-users", auth, getAllUsers);

@@ -1,7 +1,6 @@
-import bcrypt from "bcrypt";
-
 import { UserRepository } from "../database/repository/user.repository.js";
 import { createJwtToken } from "../utils/jwt.js";
+import { comparePasswords, hashPassword } from "../utils/password.js";
 
 const userRepository = new UserRepository();
 
@@ -32,10 +31,7 @@ const userSignin = async (req, res, next) => {
 		if (!existingUser) throw new Error("Invalid username or password");
 		if (existingUser.isDeleted) throw new Error("Blocked Account");
 
-		const samePassword = await bcrypt.compare(
-			password,
-			existingUser.password
-		);
+		const samePassword = comparePasswords(password, existingUser.password);
 
 		if (!samePassword) throw new Error("Invalid username or password");
 
@@ -55,9 +51,21 @@ const userSignin = async (req, res, next) => {
 const updateUser = async (req, res, next) => {
 	try {
 		const { userId } = req.user;
-		const updatedUser = await userRepository.updateUser(userId, req.body);
+		const updateData = req.body;
+		if (updateData.password) {
+			updateData.password = await hashPassword(updateData.password);
+		}
+		const updatedUser = await userRepository.updateUser(userId, updateData);
 		res.status(200).json(updatedUser);
 	} catch (error) {
+		if (error.code === 11000) {
+			const duplicateField = Object.keys(error.keyValue)[0];
+			if (duplicateField === "email") {
+				next({ message: "Email already exists" });
+			} else if (duplicateField === "mobile") {
+				next({ message: "Mobile already exists" });
+			}
+		}
 		next(error);
 	}
 };
@@ -65,6 +73,7 @@ const updateUser = async (req, res, next) => {
 const getAllUsers = async (req, res, next) => {
 	try {
 		const { userId } = req.user;
+		// Get all users except current user
 		const allUsers = await userRepository.getAllUsers(userId);
 		res.status(200).json(allUsers);
 	} catch (error) {
@@ -86,8 +95,10 @@ const followAUser = async (req, res, next) => {
 	try {
 		const { id } = req.params;
 		const { userId } = req.user;
-		const otherUser = await userRepository.getUserById(id)
-		if(!otherUser && otherUser.isDeleted) throw new Error("Other user does not exist")
+		if (id == userId) throw new Error("Cannot follow yourself");
+		const otherUser = await userRepository.getUserById(id);
+		if (!otherUser && otherUser.isDeleted)
+			throw new Error("Other user does not exist");
 		const followResult = await userRepository.followAUser(userId, id);
 		res.status(200).json(followResult);
 	} catch (error) {
@@ -99,8 +110,11 @@ const unFollowAUser = async (req, res, next) => {
 	try {
 		const { id } = req.params;
 		const { userId } = req.user;
-		const otherUser = await userRepository.getUserById(id)
-		if(!otherUser && otherUser.isDeleted) throw new Error("Other user does not exist")
+		if (id == userId)
+			throw new Error("You cannot follow or unfollow yourself");
+		const otherUser = await userRepository.getUserById(id);
+		if (!otherUser && otherUser.isDeleted)
+			throw new Error("Other user does not exist");
 		const unFollowResult = await userRepository.unFollowAUser(userId, id);
 		res.status(200).json(unFollowResult);
 	} catch (error) {
@@ -111,7 +125,10 @@ const unFollowAUser = async (req, res, next) => {
 const deleteUser = async (req, res, next) => {
 	try {
 		const { userId } = req.user;
+		// Here performing only soft delete
 		const deleted = await userRepository.deleteUser(userId);
+		// Cookie is no longer needed if the user is deleted
+		res.clearCookie("token", { httpOnly: true });
 		res.status(200).json(deleted);
 	} catch (error) {
 		next(error);

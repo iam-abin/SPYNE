@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import bcrypt from "bcrypt";
+import { hashPassword } from "../../utils/password.js";
 
 const userSchema = new mongoose.Schema(
 	{
@@ -44,11 +44,7 @@ userSchema.pre("save", async function (next) {
 		// Only hash the password if it has been modified (or is new)
 		if (!this.isModified("password")) return next();
 
-		// Generate a salt
-		const salt = await bcrypt.genSalt(10);
-
-		// Hash the password using the salt
-		const hashedPassword = await bcrypt.hash(this.password, salt);
+		const hashedPassword = await hashPassword(this.password)
 		// Replace the plain text password with the hasherrored password
 		this.password = hashedPassword;
 		next();

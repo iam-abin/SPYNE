@@ -23,6 +23,7 @@ git clone https://github.com/iam-abin/SPYNE.git
 ```
 cd SPYNE
 ```
+3. Change .env.example to .env 
 
 - To build images and run services,
 In the root directory run 

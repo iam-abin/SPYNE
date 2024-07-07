@@ -6,6 +6,6 @@ export const connectDB = async () => {
 		console.log("Discussion service connected to mongodb...");
 	} catch (error) {
         console.log(error);
-		throw new Error(error);
+		throw new Error("Database Connection Error!!!");
 	}
 };
