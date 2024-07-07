@@ -10,6 +10,10 @@ const postSchema = new mongoose.Schema(
 			default: false,
 		},
 		createdBy: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+		views: {
+			type: Number,
+			default: 0,
+		},
 	},
 	{
 		timestamps: true,

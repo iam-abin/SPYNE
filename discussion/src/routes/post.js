@@ -12,12 +12,14 @@ import { likePost, likeComment, removePostLike, removeCommentLike } from "../con
 import { addComment, removeComment, updateComment } from "../controllers/comment.controller.js";
 
 import { updateInputValidator } from "../middleware/validations/validate.update.js";
-import { createPostInputValidator } from "../middleware/validations/validate.insert.js";
+import { createPostInputValidator, logBody } from "../middleware/validations/validate.insert.js";
+import { uploadFile } from "../middleware/multer.js";
+import { handleValidationErrors } from "../middleware/validations/validation.errors.js";
 
 
 const router = express.Router();
 
-router.post("/", auth, createPostInputValidator, createPost);
+router.post("/", auth, uploadFile, createPostInputValidator, handleValidationErrors, createPost);
 router.patch("/:postId", auth, updateInputValidator, updatePost);
 router.delete("/:postId", auth, deletePost);
 
@@ -26,11 +28,12 @@ router.get("/search/:text", auth, searchPostsByText);
 
 router.post("/like-post/:postId", auth, likePost);
 router.post("/like-comment/:commentId", auth, likeComment);
-router.delete("/like/:postId", auth, removePostLike);
-router.delete("/like/:commentId", auth, removeCommentLike);
+router.delete("/like-post/:postId", auth, removePostLike);
+router.delete("/like-comment/:commentId", auth, removeCommentLike);
 
 router.post("/comment", auth, addComment);
 router.patch("/comment/:commentId", auth, updateComment);
 router.delete("/comment/:commentId", auth, removeComment);
 
 export default router;
+

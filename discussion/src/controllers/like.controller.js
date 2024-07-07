@@ -13,7 +13,8 @@ const likePost = async (req, res, next) => {
 		const { userId } = req.user;
 		const existPost = await postRepository.getPostById(postId);
 		if (!existPost) throw new Error("Post does not exist");
-
+		const likeExist = await likeRepository.getPostLike(userId, postId);
+		if (likeExist) throw new Error("Already liked this post");
 		const newLike = await likeRepository.createLike({
 			postId,
 			likedBy: userId,
@@ -33,6 +34,9 @@ const likeComment = async (req, res, next) => {
 
 		const existComment = await commentRepository.getCommentById(commentId);
 		if (!existComment) throw new Error("Comment does not exist");
+
+		const likeExist = await likeRepository.getCommentsLike(userId, commentId);
+		if (likeExist) throw new Error("Already liked this post");
 
 		const newLike = await likeRepository.createLike({
 			commentId,

@@ -6,9 +6,20 @@ export class LikeRepository {
 		return like;
 	}
 
+	async getPostLike(userId, postId) {
+		const like = await Like.findOne({ likedBy: userId, postId });
+		return like;
+	}
+
+	async getCommentsLike(userId, commentId) {
+		const like = await Like.findOne({ likedBy: userId, commentId });
+		return like;
+	}
+
+
 	async getLikeById(likeId) {
-		const comment = await Comment.findById(likeId);
-		return comment;
+		const like = await Like.findById(likeId);
+		return like;
 	}
 
 	async deleteLike(likeId) {

@@ -14,6 +14,7 @@ app.use(cookieParser());
 app.use(morgan("dev"));
 
 app.use("/api/v1/post", postRouter);
+
 app.all("*", (req, res) => {
 	return res.status(404).json({
 		errors: [{ message: "Route not found" }],

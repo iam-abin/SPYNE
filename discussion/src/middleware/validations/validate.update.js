@@ -12,6 +12,5 @@ export const updateInputValidator = [
 		.isURL()
 		.withMessage("Image must be a valid URL")
 		.trim()
-		.escape(),
-	handleValidationErrors,
+		.escape()
 ];

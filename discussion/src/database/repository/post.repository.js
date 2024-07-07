@@ -24,6 +24,18 @@ export class PostRepository {
 		return posts;
 	}
 
+	async increaseViewCount(posts) {
+		// Increment view count for each post
+		const updatePosts = posts.map(async (post) => {
+			post.views += 1;
+			await post.save();
+			return post;
+		});
+		const updatedPosts = await Promise.all(updatePosts);
+
+		return updatedPosts;
+	}
+
 	async getPostsByText(text) {
 		console.log(text);
 		const post = await Post.find({ text: text, isDeleted: false });

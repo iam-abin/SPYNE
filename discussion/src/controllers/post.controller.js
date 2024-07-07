@@ -5,16 +5,19 @@ const postRepository = new PostRepository();
 
 const createPost = async (req, res, next) => {
 	try {
-		const { text, image, hashTags } = req.body;
+		console.log(req.file.filename);
+		let { text, hashTags } = req.body;
+		hashTags = JSON.parse(hashTags);
 		const { userId } = req.user;
 		let hashTagsArray = [];
 		if (hashTags) {
 			hashTagsArray = filterAndNormalizeHashtags(hashTags);
 		}
 
+		console.log(hashTagsArray);
 		const newPost = await postRepository.createPost({
 			text,
-			image,
+			image: req.file?.filename,
 			hashTags: hashTagsArray,
 			createdBy: userId,
 		});
@@ -47,6 +50,7 @@ const searchPostsByText = async (req, res, next) => {
 	try {
 		const { text } = req.params;
 		const posts = await postRepository.getPostsByText(text);
+		await postRepository.increaseViewCount(posts)
 		res.status(200).json(posts);
 	} catch (error) {
 		next(error);
@@ -58,6 +62,7 @@ const searchPostsByHashTags = async (req, res, next) => {
 		const { hashTags } = req.body;
 
 		const posts = await postRepository.getPostsByHashTags(hashTags);
+		await postRepository.increaseViewCount(posts)
 		res.status(200).json(posts);
 	} catch (error) {
 		next(error);
