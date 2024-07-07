@@ -6,6 +6,17 @@ export class PostRepository {
 		return post;
 	}
 
+	async getPostById(postId) {
+		const post = await Post.findById(postId);
+		return post;
+	}
+
+	// // We can find a post by using multiple fields eg:- using _id ie, postId and userId
+	// async getPost(postData) {
+	// 	const post = await Post.find(postData);
+	// 	return post;
+	// }
+
 	async getPostsByHashTags(hashtagArray) {
 		console.log(hashtagArray);
 		const posts = await Post.find({ hashTags: { $in: hashtagArray } });
@@ -23,7 +34,7 @@ export class PostRepository {
 		const post = await Post.findByIdAndUpdate(postId, updatedPostData, {
 			new: true,
 		});
-		console.log("post updated ",post);
+		console.log("post updated ", post);
 		return post;
 	}
 

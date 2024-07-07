@@ -28,6 +28,9 @@ const updatePost = async (req, res, next) => {
 	try {
 		const { postId } = req.params;
 		const updateData = req.body;
+		const existPost = await postRepository.getPostById(postId);
+		if (existPost.createdBy.toString() !== userId)
+			throw new Error("You dont have such post exist");
 		if (hashTags) {
 			let hashTagsArray = [];
 			hashTagsArray = extractHashtags(hashTags);
@@ -53,7 +56,7 @@ const searchPostsByText = async (req, res, next) => {
 const searchPostsByHashTags = async (req, res, next) => {
 	try {
 		const { hashTags } = req.body;
-		
+
 		const posts = await postRepository.getPostsByHashTags(hashTags);
 		res.status(200).json(posts);
 	} catch (error) {
@@ -64,6 +67,10 @@ const searchPostsByHashTags = async (req, res, next) => {
 const deletePost = async (req, res, next) => {
 	try {
 		const { postId } = req.params;
+		const { userId } = req.user;
+		const existPost = await postRepository.getPostById(postId);
+		if (existPost.createdBy.toString() !== userId)
+			throw new Error("You dont have such post exist");
 		const deletedPost = await postRepository.deletePost(postId);
 		res.status(200).json(deletedPost);
 	} catch (error) {

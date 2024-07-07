@@ -2,11 +2,10 @@ import mongoose from "mongoose";
 
 const commentSchema = new mongoose.Schema(
 	{
-		postId: { type: mongoose.Schema.Types.ObjectId, ref: "Post" },
-		commentedBy: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
-        comment: String,
-        replyTo: { type: mongoose.Schema.Types.ObjectId, ref: "Comment" },
-        likes: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }] 
+        comment: {type: String, required: true},
+		postId: { type: mongoose.Schema.Types.ObjectId, ref: "Post", required: true },
+		commentedBy: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
+        replyTo: { type: mongoose.Schema.Types.ObjectId, ref: "Comment", default: null  },
 	},
 	{
 		timestamps: true,
