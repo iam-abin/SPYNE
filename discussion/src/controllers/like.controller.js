@@ -35,7 +35,10 @@ const likeComment = async (req, res, next) => {
 		const existComment = await commentRepository.getCommentById(commentId);
 		if (!existComment) throw new Error("Comment does not exist");
 
-		const likeExist = await likeRepository.getCommentsLike(userId, commentId);
+		const likeExist = await likeRepository.getCommentsLike(
+			userId,
+			commentId
+		);
 		if (likeExist) throw new Error("Already liked this post");
 
 		const newLike = await likeRepository.createLike({

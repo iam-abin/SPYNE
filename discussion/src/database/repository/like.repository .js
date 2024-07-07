@@ -16,7 +16,6 @@ export class LikeRepository {
 		return like;
 	}
 
-
 	async getLikeById(likeId) {
 		const like = await Like.findById(likeId);
 		return like;

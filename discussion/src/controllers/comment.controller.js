@@ -28,7 +28,7 @@ const updateComment = async (req, res, next) => {
 		const { userId } = req.user;
 
 		const existComment = await commentRepository.getCommentById(commentId);
-		console.log("existComment ",existComment);
+		console.log("existComment ", existComment);
 		// Checking the comment is of the current user
 		if (existComment?.commentedBy.toString() !== userId)
 			throw new Error("You dont have such comment exist");

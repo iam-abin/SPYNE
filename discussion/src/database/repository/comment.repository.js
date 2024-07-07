@@ -12,7 +12,11 @@ export class CommentRepository {
 	}
 
 	async updateComment(commentId, commentData) {
-		const comment = await Comment.findByIdAndUpdate(commentId, commentData, {new: true});
+		const comment = await Comment.findByIdAndUpdate(
+			commentId,
+			commentData,
+			{ new: true }
+		);
 		return comment;
 	}
 

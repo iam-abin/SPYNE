@@ -11,12 +11,6 @@ export class PostRepository {
 		return post;
 	}
 
-	// // We can find a post by using multiple fields eg:- using _id ie, postId and userId
-	// async getPost(postData) {
-	// 	const post = await Post.find(postData);
-	// 	return post;
-	// }
-
 	async getPostsByHashTags(hashtagArray) {
 		console.log(hashtagArray);
 		const posts = await Post.find({ hashTags: { $in: hashtagArray } });
@@ -37,7 +31,7 @@ export class PostRepository {
 	}
 
 	async getPostsByText(text) {
-		console.log(text);
+		// Get all posts by avoiding deleted posts
 		const post = await Post.find({ text: text, isDeleted: false });
 		return post;
 	}
@@ -46,7 +40,6 @@ export class PostRepository {
 		const post = await Post.findByIdAndUpdate(postId, updatedPostData, {
 			new: true,
 		});
-		console.log("post updated ", post);
 		return post;
 	}
 

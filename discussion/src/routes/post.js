@@ -36,4 +36,3 @@ router.patch("/comment/:commentId", auth, updateComment);
 router.delete("/comment/:commentId", auth, removeComment);
 
 export default router;
-
