@@ -2,7 +2,7 @@ import express from "express";
 import cookieParser from "cookie-parser";
 import morgan from "morgan";
 
-import { BASE_URL_DISCUSSION_SERVICE } from "./utils/constants.js";
+import { BASE_URL_POST_SERVICE } from "./utils/constants.js";
 import errorHandler from "./middleware/errorHandler.js";
 import postRouter from "./routes/post.js";
 
@@ -14,7 +14,7 @@ app.use(cookieParser());
 // http request logger middleware
 app.use(morgan("dev"));
 
-app.use(BASE_URL_DISCUSSION_SERVICE, postRouter);
+app.use(BASE_URL_POST_SERVICE, postRouter);
 
 app.all("*", (req, res) => {
 	return res.status(404).json({

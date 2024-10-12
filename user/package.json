@@ -1,12 +1,12 @@
 {
 	"name": "user-service",
 	"version": "1.0.0",
-	"description": "",
-	"main": "index.js",
+	"description": "This is user service",
+	"main": "src/index.js",
 	"type": "module",
 	"scripts": {
-		"start": "node index.js",
-		"dev": "nodemon index.js"
+		"start": "node src/index.js",
+		"dev": "nodemon src/index.js"
 	},
 	"author": "",
 	"license": "ISC",

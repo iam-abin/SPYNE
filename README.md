@@ -31,8 +31,15 @@ In the root directory run
 ```
 docker-compose up --build
 ```
+- To get logs of a docker container
+```
+docker ps
+```
+```
+docker logs -f <container-id>
+```
 
-- To Ensure All Services Are Running ( user, discussion, mongodb, nginx_proxy )
+- To Ensure All Services Are Running ( user, post, mongodb, nginx_proxy )
 
 ```
 docker ps
@@ -44,7 +51,7 @@ docker ps
 http://localhost:8080/api/v1/user/<other path>
 ```
 
-- To access the discussion service,
+- To access the post service,
 
 ```
 http://localhost:8080/api/v1/post/<other path>

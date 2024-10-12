@@ -1,16 +1,16 @@
 version: '3.8'
 
 services:
-  discussion-service:
-    container_name: discussion
+  post-service:
+    container_name: post
     build:
-      context: ./discussion
+      context: ./post
       dockerfile: Dockerfile
     ports:
       - 3001:3001
     volumes:
       - /app/node_modules
-      - ./discussion:/app
+      - ./post:/app
     depends_on:
       - mongodb
       - user-service
@@ -47,7 +47,7 @@ services:
       - 8080:80
     depends_on:
       - mongodb
-      - discussion-service
+      - post-service
       - user-service
     volumes:
       - ./proxy/nginx.conf:/etc/nginx/nginx.conf
