@@ -26,6 +26,8 @@ services:
     volumes:
       - /app/node_modules
       - ./user:/app
+    depends_on:
+      - mongodb
     restart: always
 
   mongodb:

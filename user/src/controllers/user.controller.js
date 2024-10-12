@@ -1,4 +1,5 @@
 import { UserRepository } from "../database/repository/user.repository.js";
+import { COOKIE_EXPIRY_TIME } from "../utils/constants.js";
 import { createJwtToken } from "../utils/jwt.js";
 import { comparePasswords, hashPassword } from "../utils/password.js";
 
@@ -47,7 +48,7 @@ const userSignin = async (req, res, next) => {
 		};
 
 		const token = createJwtToken(payLoad);
-		res.cookie("token", token, { httpOnly: true });
+		res.cookie("token", token, { maxAge: COOKIE_EXPIRY_TIME,httpOnly: true });
 		res.status(200).json(existingUser);
 	} catch (error) {
 		next(error);
@@ -58,6 +59,8 @@ const updateUser = async (req, res, next) => {
 	try {
 		const { userId } = req.user;
 		const updateData = req.body;
+		// const UPDATE_ALLOWED_FIELDS = [ "name", "mobile", "password" ];
+
 		if (updateData.password) {
 			updateData.password = await hashPassword(updateData.password);
 		}

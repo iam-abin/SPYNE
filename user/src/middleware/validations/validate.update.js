@@ -12,11 +12,18 @@ export const updateInputValidator = [
 		.trim()
 		.escape(),
 	body("email")
+	// .custom((value, { req }) => {
+	// 	if (req.body.hasOwnProperty("email")) {
+	// 		throw new Error("Updating 'email' is not allowed");
+	// 	}
+	// 	return true;
+	// }),
 		.optional({ checkFalsy: true })
 		.isEmail()
 		.withMessage("Email must be valid")
 		.trim()
-		.escape(),
+		.escape()
+		,
 	body("mobile")
 		.optional({ checkFalsy: true })
 		.notEmpty()
